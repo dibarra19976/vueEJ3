@@ -1,0 +1,38 @@
+#editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#editor #title{
+    font-size: 20pt;
+}
+
+#editor textarea{
+    resize:none ;
+    height: 800px;
+}
+
+.posts ul{
+    display: flex;
+    flex-direction: column;
+}
+
+.posts ul li{
+    width: 100%;
+}
+
+.popupcontainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    position:fixed;
+    z-index: 10;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+

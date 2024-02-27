@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home - Penscape</title>
+    <link rel="icon" type="image/x-icon" href="./ico/icon.ico?" />
+    <!-- CUSTOM BOOTSTRAP -->
+    <link rel="stylesheet" href="./styles/bootstrap/custom.css" />
+    <!-- ORIGINAL CSS (Edited a bit to use SASS and LESS with some components) -->
+    <link rel="stylesheet" href="./styles/style.css" />
+    <!-- LESS CSS -->
+    <!-- <link rel="stylesheet" href="../styles/article_less.css" /> -->
+    <!-- SASS CSS -->
+    <link rel="stylesheet" href="./styles/article_sass.css" />
+    <!-- SASS and LESS files are interchangable and contain the same styles in their respective formats -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <script src="./node_modules/crypto-js/crypto-js.js"></script>
+    <script src="./scripts/indexDBUsers.js"></script>
+
+    <div id="app">
+      <Navbar :login="false" ></Navbar>
+      <div class="container-fluid content w-100 position-relative mb-5 content">
+        <div class="container w-100 article-card my-3">
+          <div class="row g-2">
+            <div class="col-4 h-100 d-sm-none d-md-block d-none d-sm-block">
+              <img src="./img/16-9.png" alt="" class="img-fluid" />
+            </div>
+
+            <div class="col h-100 position-relative">
+              <div class="card-content p-2">
+                <h1>
+                  <a class="link" href="./docs/article.html">Article title</a>
+                </h1>
+                <p class="">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Beatae quibusdam sint reiciendis atque similique consequuntur
+                  sed ad, temporibus iste laborum, voluptas facere, officiis
+                  harum vitae! Sed repudiandae reiciendis cumque quis.
+                </p>
+                <h5>#tag1, #tag2</h5>
+              </div>
+              <div class="continue w-100 p-1 m-0">Continue reading</div>
+              <div class="position-absolute profile-pic"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container w-100 article-card my-3">
+          <div class="row g-2">
+            <div class="col-4 h-100 d-sm-none d-md-block d-none d-sm-block">
+              <img src="./img/16-9.png" alt="" class="img-fluid" />
+            </div>
+
+            <div class="col h-100 position-relative">
+              <div class="card-content p-2">
+                <h1>
+                  <a class="link" href="./docs/article.html">Article title</a>
+                </h1>
+                <p class="">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Beatae quibusdam sint reiciendis atque similique consequuntur
+                  sed ad, temporibus iste laborum, voluptas facere, officiis
+                  harum vitae! Sed repudiandae reiciendis cumque quis.
+                </p>
+                <h5>#tag1, #tag2</h5>
+              </div>
+              <div class="continue w-100 p-1 m-0">Continue reading</div>
+              <div class="position-absolute profile-pic"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container w-100 article-card my-3">
+          <div class="row g-2">
+            <div class="col-4 h-100 d-sm-none d-md-block d-none d-sm-block">
+              <img src="./img/16-9.png" alt="" class="img-fluid" />
+            </div>
+
+            <div class="col h-100 position-relative">
+              <div class="card-content p-2">
+                <h1>
+                  <a class="link" href="./docs/article.html">Article title</a>
+                </h1>
+                <p class="">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Beatae quibusdam sint reiciendis atque similique consequuntur
+                  sed ad, temporibus iste laborum, voluptas facere, officiis
+                  harum vitae! Sed repudiandae reiciendis cumque quis.
+                </p>
+                <h5>#tag1, #tag2</h5>
+              </div>
+              <div class="continue w-100 p-1 m-0">Continue reading</div>
+              <div class="position-absolute profile-pic"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     <Bottom></Bottom>
+    </div>
+
+    <script type="module">      
+      import Bottom from "/components/bottom.js";
+      import Navbar from "/components/navbar.js";
+      import Post from "/components/post.js";
+      
+      const { createApp } = Vue;
+      const app = createApp({
+        data: function () {
+          return {};
+        },
+        components: {
+          Navbar,
+          Bottom,
+          Post
+        },
+        methods: {},
+      }).mount("#app");
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

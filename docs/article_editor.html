@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Article - Penscape</title>
+    <link rel="icon" type="image/x-icon" href="../ico/icon.ico?" />
+    <!-- CUSTOM BOOTSTRAP -->
+    <link rel="stylesheet" href="../styles/bootstrap/custom.css" />
+    <!-- ORIGINAL CSS (Edited a bit to use SASS and LESS with some components) -->
+    <link rel="stylesheet" href="../styles/style.css" />
+    <!-- LESS CSS -->
+    <!-- <link rel="stylesheet" href="../styles/article_less.css" /> -->
+    <!-- SASS CSS -->
+    <link rel="stylesheet" href="../styles/article_sass.css" />
+    <!-- SASS and LESS files are interchangable and contain the same styles in their respective formats -->
+    <link rel="stylesheet" href="../styles/article_creator.css" />
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <!-- VUE APP -->
+
+    <div id="app">
+      <Navbar></Navbar>
+      <div class="popupcontainer d-none" id="popup" ref="pop">
+        <div class="bg-white p-5">
+          <h2>Do you want to delete the article?</h2>
+          <div class="d-flex justify-content-center">
+            <button class="btn m-2" v-on:click="removePost(true)">
+              Delete
+            </button>
+            <button class="btn m-2" v-on:click="removePost(false)">No</button>
+          </div>
+        </div>
+      </div>
+      <main
+        class="container-fluid content w-100 position-relative mb-5 content"
+      >
+        <div class="container w-100">
+          <h1>Article Editor</h1>
+          <label for="Title" class="form-label">Title</label>
+          <div id="editor">
+            <input
+              type="text"
+              id="title"
+              v-model="post.title"
+              placeholder="Write a title...."
+              class="form-control"
+            />
+            <label for="author" class="form-label">Select the author</label>
+            <select
+              name="author"
+              id="author"
+              v-model="post.author"
+              class="form-control"
+            >
+              <option value="" disabled selected>Select your option</option>
+              <option value="Federico">Federico</option>
+              <option value="William Afton">William Afton</option>
+              <option value="Shakespear">Shakespear</option>
+              <option value="Dedede">Dedede</option>
+            </select>
+            <label for="description" class="form-label">Description</label>
+            <input
+              type="text"
+              id="description"
+              placeholder="Add a short description (50 characters)"
+              class="form-control"
+              maxlength="50"
+              v-model="post.description"
+            />
+            <label for="tags" class="form-label">Tags</label>
+            <input
+              type="text"
+              id="tags"
+              placeholder="Add some #tags for your article"
+              class="form-control"
+              v-model="post.tags"
+            />
+            <label for="img" class="form-label">Main Image</label>
+            <input
+              type="file"
+              id="img"
+              ref="img"
+              name="img"
+              accept="image/*"
+              class="form-control"
+            />
+            <label for="content" class="form-label">Content</label>
+            <textarea
+              v-model="post.article"
+              name="content"
+              id="content"
+              placeholder="Write your article!"
+              class="form-control"
+            ></textarea>
+
+            <div v-if="editing==false" class="w-100">
+              <button v-on:click="createPost" id="new" class="btn w-100">
+                Save Article
+              </button>
+            </div>
+            <div v-if="editing==true" class="w-100">
+              <button v-on:click="saveEdit" id="new" class="btn w-100">
+                Save Edit
+              </button>
+            </div>
+          </div>
+          <h1>Articles</h1>
+          <div class="posts">
+            <ul v-if="array.length">
+              <!-- <li v-for="(item, index) in array">
+                <h1>Title: {{ item.title }}</h1>
+                <h2>Author {{ item.author }}</h2>
+                <p>Description: {{ item.description }}</p>
+                <button class="btn" v-on:click="editPost(index)">Edit</button>
+                <button
+                  class="btn"
+                  v-if="editing==false"
+                  v-on:click="deletePopUp(index)"
+                >
+                  Delete
+                </button>
+              </li> -->
+              <Post
+                v-for="(post, index) in array"
+                v-bind:key="index"
+                :post="post"
+                :index="index"
+                @editpost="editPost(index)"
+                @deletepopup="deletePopUp(index)"
+              >
+              </Post>
+            </ul>
+            <ul v-else>
+              No articles yet...
+            </ul>
+            <Bottom></Bottom>
+          </div>
+          <!-- VUE APP -->
+        </div>
+      </main>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../node_modules/crypto-js/crypto-js.js"></script>
+    <script src="../scripts/indexDBUsers.js"></script>
+    <script src="../scripts/navbar.js"></script>
+  </body>
+  <script type="module">
+    import Bottom from "/components/bottom.js";
+    import Navbar from "/components/navbar.js";
+    import Post from "/components/post.js";
+
+    const { createApp, ref } = Vue;
+
+    let app = createApp({
+      data() {
+        return {
+          post: {
+            author: "",
+            title: "",
+            img: "",
+            article: "",
+            status: "draft",
+            tags: "",
+            description: "",
+            creation_date: "",
+            publishing_date: "",
+            id: 0,
+          },
+          posts: 0,
+          array: localStorage.getItem("posts")
+            ? JSON.parse(localStorage.getItem("posts"))
+            : [],
+          editing: false,
+          c: 0,
+        };
+      },
+      methods: {
+        resetForm: function (e) {
+          this.post = {
+            author: "",
+            title: "",
+            img: "",
+            article: "",
+            status: "draft",
+            tags: "",
+            description: "",
+            creation_date: "",
+            publishing_date: "",
+            id: 0,
+          };
+          this.$refs.img.value = null;
+        },
+        createPost: function (e) {
+          if (
+            !(this.post.title === null || this.post.title === "") &&
+            !(this.post.article === null || this.post.article === "") &&
+            !(this.post.description === null || this.post.description === "") &&
+            !(this.post.tags === null || this.post.tags === "") &&
+            !(this.post.author === null || this.post.author === "") &&
+            !(this.$refs.img.value === null)
+          ) {
+            this.post.creation_date = new Date().toLocaleDateString("en-GB");
+            this.post.id = this.posts;
+            this.posts++;
+
+            const post = { ...this.post };
+            this.array.push(post);
+            this.resetForm();
+            localStorage.setItem("posts", JSON.stringify(this.array));
+          }
+        },
+        removePost: function (remove) {
+          if (remove) {
+            this.array.splice(this.delete, 1);
+            localStorage.setItem("posts", JSON.stringify(this.array));
+          }
+          this.$refs.pop.classList.toggle("d-none");
+        },
+        deletePopUp: function (index) {
+          if (!this.editing) {
+            this.delete = index;
+            this.$refs.pop.classList.toggle("d-none");
+          }
+        },
+        editPost: function (index) {
+          this.position = index;
+          this.editing = true;
+          this.post = { ...this.array[index] };
+        },
+        saveEdit: function (e) {
+          if (
+            !(this.post.title === null || this.post.title === "") &&
+            !(this.post.article === null || this.post.article === "") &&
+            !(this.post.description === null || this.post.description === "") &&
+            !(this.post.tags === null || this.post.tags === "")
+          ) {
+            this.array[this.position] = { ...this.post };
+            this.editing = false;
+            this.resetForm();
+            localStorage.setItem("posts", JSON.stringify(this.array));
+          }
+        },
+      },
+      components: {
+        Navbar,
+        Bottom,
+        Post,
+      },
+    }).mount("#app");
+  </script>
+</html>
